@@ -41,13 +41,13 @@ pub struct Lines<'a> {
 
 /// An iterator over attribute assignments in a single line.
 pub struct Iter<'a> {
-    attrs: bstr::Fields<'a>,
+    attrs: &'a [u8],
 }
 
 impl<'a> Iter<'a> {
     /// Create a new instance to parse attribute assignments from `input`.
     pub fn new(input: &'a BStr) -> Self {
-        Iter { attrs: input.fields() }
+        Iter { attrs: input.as_ref() }
     }
 
     fn parse_attr(&self, attr: &'a [u8]) -> Result<AssignmentRef<'a>, name::Error> {
@@ -84,7 +84,18 @@ impl<'a> Iterator for Iter<'a> {
     type Item = Result<AssignmentRef<'a>, name::Error>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        let attr = self.attrs.next().filter(|a| !a.is_empty())?;
+        let start = self.attrs.iter().position(|a| !a.is_ascii_whitespace())?;
+        self.attrs = &self.attrs[start..];
+
+        let end = self
+            .attrs
+            .iter()
+            .position(u8::is_ascii_whitespace)
+            .unwrap_or(self.attrs.len());
+
+        let attr = &self.attrs[..end];
+        self.attrs = &self.attrs[end..];
+
         self.parse_attr(attr).into()
     }
 }

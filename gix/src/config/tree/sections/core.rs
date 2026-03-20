@@ -173,7 +173,7 @@ mod filter {
         use std::borrow::Cow;
 
         use crate::{
-            bstr::{BStr, ByteSlice},
+            bstr::BStr,
             config,
             config::tree::{Key, core::CheckRoundTripEncoding},
         };
@@ -192,10 +192,10 @@ mod filter {
                         for encoding in value
                             .as_ref()
                             .split(|b| *b == b',' || *b == b' ')
-                            .filter(|e| !e.trim().is_empty())
+                            .filter(|e| !e.trim_ascii().is_empty())
                         {
                             out.push(
-                                gix_filter::encoding::Encoding::for_label(encoding.trim()).ok_or_else(|| {
+                                gix_filter::encoding::Encoding::for_label(encoding.trim_ascii()).ok_or_else(|| {
                                     config::encoding::Error {
                                         key: self.logical_name().into(),
                                         value: value.as_ref().to_owned(),
@@ -388,11 +388,7 @@ mod abbrev {
 
     use config::abbrev::Error;
 
-    use crate::{
-        bstr::{BStr, ByteSlice},
-        config,
-        config::tree::core::Abbrev,
-    };
+    use crate::{bstr::BStr, config, config::tree::core::Abbrev};
 
     impl Abbrev {
         /// Convert the given `hex_len_str` into the amount of characters that a short hash should have.
@@ -403,13 +399,13 @@ mod abbrev {
             object_hash: gix_hash::Kind,
         ) -> Result<Option<usize>, Error> {
             let max = object_hash.len_in_hex() as u8;
-            if hex_len_str.trim().is_empty() {
+            if hex_len_str.trim_ascii().is_empty() {
                 return Err(Error {
                     value: hex_len_str.into_owned(),
                     max,
                 });
             }
-            if hex_len_str.trim().eq_ignore_ascii_case(b"auto") {
+            if hex_len_str.trim_ascii().eq_ignore_ascii_case(b"auto") {
                 Ok(None)
             } else {
                 let value_bytes = hex_len_str.as_ref();

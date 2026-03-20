@@ -1,6 +1,6 @@
 use std::fs;
 
-use bstr::{BString, ByteSlice};
+use bstr::BString;
 use gix_config::file::{
     includes,
     includes::conditional,
@@ -298,7 +298,7 @@ fn assure_git_agrees(expected: Value, dir: &mut gix_testtools::tempfile::TempDir
         output,
         keep_dir_on_disk()
     );
-    let git_output: BString = output.stdout.trim_end().into();
+    let git_output: BString = output.stdout.trim_ascii_end().into();
     assert_eq!(
         git_output,
         match expected {

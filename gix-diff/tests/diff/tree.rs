@@ -123,7 +123,7 @@ mod changes {
                 )
                 .expect("head ref")
                 .as_bstr()
-                .trim(),
+                .trim_ascii(),
             )
             .expect("valid hex id")
         }
@@ -142,7 +142,7 @@ mod changes {
                         db.find_commit(&c.id, &mut buf)
                             .unwrap()
                             .message
-                            .trim()
+                            .trim_ascii()
                             .to_str_lossy()
                             .into_owned(),
                         c.id,

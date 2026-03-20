@@ -115,7 +115,7 @@ fn parse_trailer_line(line: &[u8]) -> Option<(&BStr, usize)> {
         return None;
     }
     let separator = find_separator(line)?;
-    (separator > 0).then_some((line[..separator].trim().as_bstr(), separator))
+    (separator > 0).then_some((line[..separator].trim_ascii().as_bstr(), separator))
 }
 
 fn is_blank_line(line: &[u8]) -> bool {
@@ -139,12 +139,12 @@ fn unfold_value(value: &[u8]) -> Cow<'_, BStr> {
     };
 
     if physical_lines.peek().is_none() {
-        return Cow::Borrowed(first_line.trim().as_bstr());
+        return Cow::Borrowed(first_line.trim_ascii().as_bstr());
     }
 
-    let mut out = BString::from(first_line.trim());
+    let mut out = BString::from(first_line.trim_ascii());
     for line in physical_lines {
-        let line = line.trim();
+        let line = line.trim_ascii();
         if line.is_empty() {
             continue;
         }

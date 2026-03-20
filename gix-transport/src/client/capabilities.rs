@@ -104,7 +104,7 @@ impl Capabilities {
     /// blocking and async traits for as long as possible. There is no value in parsing a few bytes
     /// in a non-blocking fashion.
     pub fn from_lines(lines_buf: BString) -> Result<Capabilities, Error> {
-        let mut lines = <_ as bstr::ByteSlice>::lines(lines_buf.as_slice().trim());
+        let mut lines = <_ as bstr::ByteSlice>::lines(lines_buf.as_slice().trim_ascii());
         let version_line = lines.next().ok_or(Error::MissingVersionLine)?;
         let (name, value) = version_line.split_at(
             version_line

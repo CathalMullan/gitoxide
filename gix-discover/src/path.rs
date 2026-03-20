@@ -51,13 +51,12 @@ fn read_regular_file_content_with_size_limit(path: &std::path::Path) -> std::io:
 /// whitespace before interpreting the content. Empty or whitespace-only path
 /// files are invalid.
 fn read_plain_file_content(path: &std::path::Path) -> Option<std::io::Result<Vec<u8>>> {
-    use bstr::ByteSlice;
     let mut buf = match read_regular_file_content_with_size_limit(path) {
         Ok(buf) => buf,
         Err(err) if err.kind() == std::io::ErrorKind::NotFound => return None,
         Err(err) => return Some(Err(err)),
     };
-    let trimmed_len = buf.trim_end().len();
+    let trimmed_len = buf.trim_ascii_end().len();
     buf.truncate(trimmed_len);
     if buf.is_empty() {
         return Some(Err(std::io::Error::new(

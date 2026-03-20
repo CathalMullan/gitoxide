@@ -129,7 +129,7 @@ pub(in crate::handshake::refs) fn parse_v1(
     out_shallow: &mut Vec<ShallowUpdate>,
     line: &BStr,
 ) -> Result<(), Error> {
-    let trimmed = line.trim_end();
+    let trimmed = line.trim_ascii_end();
     let (hex_hash, path) = trimmed.split_at(
         trimmed
             .find(b" ")
@@ -198,7 +198,7 @@ pub(in crate::handshake::refs) fn parse_v1(
 }
 
 pub(in crate::handshake::refs) fn parse_v2(line: &BStr) -> Result<Ref, Error> {
-    let trimmed = line.trim_end();
+    let trimmed = line.trim_ascii_end();
     let mut tokens = trimmed.splitn(4, |b| *b == b' ');
     match (tokens.next(), tokens.next()) {
         (Some(hex_hash), Some(path)) => {

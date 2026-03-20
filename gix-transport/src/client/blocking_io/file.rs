@@ -223,7 +223,7 @@ impl client::blocking_io::Transport for SpawnProcessOnDemand {
         };
         cmd.stdin = Stdio::piped();
         cmd.stdout = Stdio::piped();
-        if self.path.trim().first() == Some(&b'-') {
+        if self.path.trim_ascii().first() == Some(&b'-') {
             return Err(client::Error::AmbiguousPath {
                 path: self.path.clone(),
             });

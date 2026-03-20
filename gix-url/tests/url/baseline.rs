@@ -139,7 +139,7 @@ mod baseline {
         let blocks = BASELINE
             .split(|c| c == &b';')
             .filter(|block| !block.is_empty())
-            .map(ByteSlice::trim);
+            .map(<[u8]>::trim_ascii);
 
         for block in blocks {
             let (url, diag_url) = GitDiagUrl::parse(block.as_bstr());
@@ -190,7 +190,7 @@ mod baseline {
                     Some(input)
                 }
             }
-            let mut lines = diag_url.lines().map(ByteSlice::trim);
+            let mut lines = diag_url.lines().map(<[u8]>::trim_ascii);
             let mut next_attr = |name: &str| {
                 lines
                     .next()

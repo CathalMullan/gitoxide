@@ -1,7 +1,7 @@
 use std::io;
 
 use anyhow::bail;
-use gix::bstr::{BString, ByteSlice};
+use gix::bstr::BString;
 #[cfg(feature = "serde")]
 use gix::mailmap::Entry;
 
@@ -75,9 +75,9 @@ pub fn check(
             Ok(a) => a,
             Err(_) => {
                 let Some(email) = contact
-                    .trim_start()
+                    .trim_ascii_start()
                     .strip_prefix(b"<")
-                    .and_then(|rest| rest.trim_end().strip_suffix(b">"))
+                    .and_then(|rest| rest.trim_ascii_end().strip_suffix(b">"))
                 else {
                     writeln!(err, "Failed to parse contact '{contact}' - skipping")?;
                     continue;

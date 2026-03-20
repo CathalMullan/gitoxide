@@ -6,7 +6,7 @@ use std::{
     process::Command,
 };
 
-use bstr::{BString, ByteSlice};
+use bstr::BString;
 use gix_config::file::init::{self};
 
 use crate::file::{
@@ -175,7 +175,7 @@ fn assure_git_agrees(expected: Option<Value>, env: GitEnv) -> crate::Result {
         output,
         env.tempdir.keep().display()
     );
-    let git_output: BString = output.stdout.trim_end().into();
+    let git_output: BString = output.stdout.trim_ascii_end().into();
     assert_eq!(
         git_output,
         match expected {

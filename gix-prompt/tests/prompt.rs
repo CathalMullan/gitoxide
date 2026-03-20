@@ -27,7 +27,7 @@ mod ask {
 
         output
             .stdout
-            .trim()
+            .trim_ascii()
             .to_str()
             .expect("value of target_directory is valid UTF8")
             .to_owned()

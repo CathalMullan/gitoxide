@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 
 use crate::{
     Repository, ThreadSafeRepository,
-    bstr::{BStr, BString, ByteSlice},
+    bstr::{BStr, BString},
     worktree::Proxy,
 };
 
@@ -80,7 +80,7 @@ impl Proxy<'_> {
     pub fn lock_reason(&self) -> Option<BString> {
         std::fs::read(self.git_dir.join("locked"))
             .ok()
-            .map(|contents| contents.trim().into())
+            .map(|contents| contents.trim_ascii().into())
     }
 
     /// Transform this proxy into a [`Repository`] while ignoring issues reading `base()` and ignoring that it might not exist.

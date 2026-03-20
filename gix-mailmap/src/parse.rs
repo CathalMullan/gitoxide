@@ -32,7 +32,7 @@ impl<'a> Iterator for Lines<'a> {
                 Some(b) if *b == b'#' => continue,
                 Some(_) => {}
             }
-            let line = line.trim();
+            let line = line.trim_ascii();
             if line.is_empty() {
                 continue;
             }
@@ -45,7 +45,7 @@ impl<'a> Iterator for Lines<'a> {
 fn parse_line(line: &BStr, line_number: usize) -> Result<Entry<'_>, Error> {
     let (name1, email1, rest) = parse_name_and_email(line, line_number)?;
     let (name2, email2, rest) = parse_name_and_email(rest, line_number)?;
-    if !rest.trim().is_empty() {
+    if !rest.trim_ascii().is_empty() {
         return Err(ValidationError::new_with_input(
             format!("Line {line_number} has too many names or emails, or none at all"),
             line,
@@ -86,13 +86,13 @@ fn parse_name_and_email(
             let closing_bracket = email.find_byte(b'>').ok_or_raise(|| {
                 ValidationError::new_with_input(format!("{line_number}: Missing closing bracket '>' in email"), line)
             })?;
-            let email = email[..closing_bracket].trim().as_bstr();
+            let email = email[..closing_bracket].trim_ascii().as_bstr();
             if email.is_empty() {
                 return Err(
                     ValidationError::new_with_input(format!("{line_number}: Email must not be empty"), line).raise(),
                 );
             }
-            let name = line[..start_bracket].trim().as_bstr();
+            let name = line[..start_bracket].trim_ascii().as_bstr();
             let rest = line[start_bracket + closing_bracket + 2..].as_bstr();
             Ok(((!name.is_empty()).then_some(name), Some(email), rest))
         }

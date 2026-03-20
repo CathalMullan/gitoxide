@@ -29,8 +29,8 @@ impl<'a> IdentityRef<'a> {
     /// Trim whitespace surrounding the name and email and return a new identity.
     pub fn trim(&self) -> IdentityRef<'a> {
         IdentityRef {
-            name: self.name.trim().as_bstr(),
-            email: self.email.trim().as_bstr(),
+            name: self.name.trim_ascii().as_bstr(),
+            email: self.email.trim_ascii().as_bstr(),
         }
     }
 }

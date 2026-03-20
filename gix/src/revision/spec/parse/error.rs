@@ -92,18 +92,18 @@ pub(crate) fn ambiguous(candidates: Vec<ObjectId>, prefix: gix_hash::Prefix, rep
                         use bstr::ByteSlice;
                         let commit = obj.to_commit_ref();
                         let date = match commit.committer() {
-                            Ok(signature) => signature.time.trim().to_owned(),
+                            Ok(signature) => signature.time.trim_ascii().to_owned(),
                             Err(_) => {
                                 let committer = commit.committer;
                                 let manually_parsed_best_effort = committer
                                     .rfind_byte(b'>')
-                                    .map(|pos| committer[pos + 1..].trim().as_bstr().to_string());
+                                    .map(|pos| committer[pos + 1..].trim_ascii().as_bstr().to_string());
                                 manually_parsed_best_effort.unwrap_or_default()
                             }
                         };
                         CandidateInfo::Commit {
                             date,
-                            title: commit.message().title.trim().into(),
+                            title: commit.message().title.trim_ascii().into(),
                         }
                     }
                 },

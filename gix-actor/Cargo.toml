@@ -24,7 +24,6 @@ gix-error = { version = "^0.2.4", path = "../gix-error" }
 
 bstr = { version = "1.12.0", default-features = false, features = [
     "std",
-    "unicode",
 ] }
 serde = { version = "1.0.114", optional = true, default-features = false, features = [
     "derive",

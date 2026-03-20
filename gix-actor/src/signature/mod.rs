@@ -36,9 +36,9 @@ mod _ref {
         /// Trim the whitespace surrounding the `name`, `email` and `time` and return a new signature.
         pub fn trim(&self) -> SignatureRef<'a> {
             SignatureRef {
-                name: self.name.trim().as_bstr(),
-                email: self.email.trim().as_bstr(),
-                time: self.time.trim(),
+                name: self.name.trim_ascii().as_bstr(),
+                email: self.email.trim_ascii().as_bstr(),
+                time: self.time.trim_ascii(),
             }
         }
 
@@ -56,7 +56,7 @@ mod _ref {
         /// For a fallible and more complete, but slower version, use [`time()`](Self::time).
         pub fn seconds(&self) -> gix_date::SecondsSinceUnixEpoch {
             self.time
-                .trim()
+                .trim_ascii()
                 .split(' ')
                 .next()
                 .and_then(|i| i.parse().ok())

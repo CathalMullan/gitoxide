@@ -472,11 +472,11 @@ pub mod shebang {
             Some(space_idx) => {
                 let space = slash_idx + space_idx;
                 Data {
-                    interpreter: gix_path::from_byte_slice(line[..space].trim()).to_owned(),
+                    interpreter: gix_path::from_byte_slice(line[..space].trim_ascii()).to_owned(),
                     args: line
                         .get(space + 1..)
                         .and_then(|mut r| {
-                            r = r.trim();
+                            r = r.trim_ascii();
                             if r.is_empty() {
                                 return None;
                             }
@@ -492,7 +492,7 @@ pub mod shebang {
                 }
             }
             None => Data {
-                interpreter: gix_path::from_byte_slice(line.trim()).to_owned(),
+                interpreter: gix_path::from_byte_slice(line.trim_ascii()).to_owned(),
                 args: Vec::new(),
             },
         })

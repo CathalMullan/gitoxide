@@ -257,7 +257,7 @@ mod from_tree {
 
         let head = {
             let hex = std::fs::read(dir.join("head.hex"))?;
-            gix_hash::ObjectId::from_hex(hex.trim())?
+            gix_hash::ObjectId::from_hex(hex.trim_ascii())?
         };
         let odb = gix_odb::at_opts(
             dir.join(".git").join("objects"),

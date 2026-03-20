@@ -52,7 +52,7 @@ pub(super) mod function {
     use std::borrow::Cow;
 
     use crate::{
-        bstr::{ByteSlice, ByteVec},
+        bstr::ByteVec,
         config::{
             cache::util::ApplyLeniency,
             credential_helpers::Error,
@@ -146,7 +146,7 @@ pub(super) mod function {
                 };
                 if let Some((section, helper_key, username_key, use_http_path_key)) = section {
                     for value in section.values(helper_key.name) {
-                        if value.trim().is_empty() {
+                        if value.trim_ascii().is_empty() {
                             programs.clear();
                         } else {
                             programs.push(gix_credentials::Program::from_custom_definition(value.into_owned()));
@@ -155,7 +155,7 @@ pub(super) mod function {
                     if let Some(Some(user)) = (!url_had_user_initially).then(|| {
                         section
                             .value(username_key.name)
-                            .filter(|n| !n.trim().is_empty())
+                            .filter(|n| !n.trim_ascii().is_empty())
                             .and_then(|n| {
                                 let n: Vec<_> = Cow::into_owned(n).into();
                                 n.into_string().ok()

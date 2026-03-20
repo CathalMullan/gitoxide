@@ -183,7 +183,7 @@ impl Server {
                     msg: "expected data line, got ".into(),
                     actual: format!("{line:?}").into(),
                 })?
-                .trim();
+                .trim_ascii();
             let mut tokens = line.splitn(2, |b| *b == b'=');
             let (key, value) = tokens
                 .next()

@@ -23,7 +23,7 @@ pub fn gitdir(input: &[u8]) -> Result<PathBuf, gitdir::Error> {
         .strip_prefix(b"gitdir: ")
         .ok_or_else(|| gitdir::Error::InvalidFormat { input: input.into() })?
         .as_bstr();
-    let path = path.trim_end().as_bstr();
+    let path = path.trim_ascii_end().as_bstr();
     if path.is_empty() {
         return Err(gitdir::Error::InvalidFormat { input: input.into() });
     }

@@ -259,13 +259,13 @@ pub mod baseline {
                                 .unwrap_or_else(|| panic!("line unhandled: {:?}", line.as_bstr()));
                             let mut tokens = past_note.split(|b| *b == b' ').filter(|t| !t.is_empty());
 
-                            let mut lhs = tokens.next().unwrap().trim();
+                            let mut lhs = tokens.next().unwrap().trim_ascii();
                             if lhs.as_bstr() == "->" {
                                 lhs = "HEAD".as_bytes();
                             } else {
                                 tokens.next();
                             }
-                            let rhs = tokens.next().unwrap().trim();
+                            let rhs = tokens.next().unwrap().trim_ascii();
                             let local = (rhs != b"FETCH_HEAD").then(|| full_tracking_ref(rhs.into()));
                             if !(lhs.as_bstr() == "HEAD" && local.is_none()) {
                                 mappings.push(Mapping {

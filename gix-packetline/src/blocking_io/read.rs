@@ -79,7 +79,7 @@ where
                         match line {
                             #[allow(unused_variables)]
                             PacketLineRef::Data(d) => {
-                                gix_trace::trace!("<< {}", d.as_bstr().trim().as_bstr());
+                                gix_trace::trace!("<< {}", d.as_bstr().trim_ascii().as_bstr());
                             }
                             PacketLineRef::Flush => {
                                 gix_trace::trace!("<< FLUSH");
